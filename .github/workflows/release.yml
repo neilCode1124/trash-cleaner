@@ -49,8 +49,8 @@ jobs:
         run: |
           if [ "${{ runner.os }}" == "Windows" ]; then
             cp target/release/trash-cleaner.exe ${{ matrix.asset_name }}.exe
-            # Create checksum for Windows
-            certutil -hashfile ${{ matrix.asset_name }}.exe SHA256 | findstr /v "SHA256" | findstr /v "^$" > ${{ matrix.asset_name }}.exe.sha256
+            # Create checksum for Windows using PowerShell
+            powershell -Command "(Get-FileHash -Path ${{ matrix.asset_name }}.exe -Algorithm SHA256).Hash | Out-File -Encoding ASCII ${{ matrix.asset_name }}.exe.sha256"
           else
             cp target/release/trash-cleaner ${{ matrix.asset_name }}
             chmod +x ${{ matrix.asset_name }}
