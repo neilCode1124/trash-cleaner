@@ -1,11 +1,11 @@
 use clap::Parser;
 use inquire::MultiSelect;
+use std::fmt;
 use std::path::PathBuf;
 use std::process;
-use std::fmt;
 
-mod scanner;
 mod cleaner;
+mod scanner;
 mod utils;
 
 // Wrapper enum for selection items
@@ -61,13 +61,9 @@ fn main() {
     };
 
     println!("🚀 Scanning (multi-threaded mode)...");
-    
+
     // Call scanner
-    let zombie_list = scanner::scan_dir(
-        &root_path, 
-        args.days, 
-        target_name
-    );
+    let zombie_list = scanner::scan_dir(&root_path, args.days, target_name);
 
     if zombie_list.is_empty() {
         println!("✨ No junk directories found! Your system is clean.");
@@ -76,7 +72,11 @@ fn main() {
 
     // Calculate total size
     let total_size: u64 = zombie_list.iter().map(|z| z.size).sum();
-    println!("📦 Found {} candidate directories | Total: {}", zombie_list.len(), utils::format_size(total_size));
+    println!(
+        "📦 Found {} candidate directories | Total: {}",
+        zombie_list.len(),
+        utils::format_size(total_size)
+    );
 
     // If dry-run, display and exit
     if args.dry_run {
@@ -89,20 +89,17 @@ fn main() {
     select_items.extend(zombie_list.iter().cloned().map(SelectItem::Directory));
 
     // Interactive selection
-    let selection = MultiSelect::new(
-        "Select directories to clean:",
-        select_items,
-    )
-    .with_page_size(10)
-    .with_help_message("Space: toggle | Enter: confirm")
-    .prompt();
+    let selection = MultiSelect::new("Select directories to clean:", select_items)
+        .with_page_size(10)
+        .with_help_message("Space: toggle | Enter: confirm")
+        .prompt();
 
     match selection {
         Ok(selected_items) => {
             // Check if "Select All" was selected
-            let has_select_all = selected_items.iter().any(|item| {
-                matches!(item, SelectItem::SelectAll)
-            });
+            let has_select_all = selected_items
+                .iter()
+                .any(|item| matches!(item, SelectItem::SelectAll));
 
             let directories_to_delete = if has_select_all {
                 // If "Select All" is selected, delete all directories
