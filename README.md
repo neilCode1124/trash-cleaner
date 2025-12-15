@@ -13,12 +13,37 @@ A powerful command-line tool written in Rust for cleaning up build artifacts and
 
 ## Installation
 
+### Download Pre-built Binaries (Recommended)
+
+Visit the [Releases](https://github.com/neilCode1124/trash-cleaner/releases) page to download pre-built binaries for your platform:
+
+- **Linux**: `trash-cleaner-linux-x86_64`
+- **macOS**: `trash-cleaner-macos-x86_64`
+- **Windows**: `trash-cleaner-windows-x86_64.exe`
+
+After downloading:
+
+- **Linux/macOS**: Make it executable and move to your PATH
+  ```bash
+  chmod +x trash-cleaner-linux-x86_64
+  sudo mv trash-cleaner-linux-x86_64 /usr/local/bin/trash-cleaner
+  ```
+- **Windows**: Add the directory containing the executable to your PATH, or run it directly
+
 ### From Source
 
+If you have Rust installed, you can build from source:
+
 ```bash
-git clone <your-repo-url>
-cd hello-rust
+git clone https://github.com/neilCode1124/trash-cleaner.git
+cd trash-cleaner
 cargo install --path .
+```
+
+Or install directly from crates.io (when published):
+
+```bash
+cargo install trash-cleaner
 ```
 
 ### Usage

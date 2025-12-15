@@ -48,16 +48,23 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" == "Windows" ]; then
-            cp target/release/trash-cleaner.exe ${{ matrix.asset_name }}
+            cp target/release/trash-cleaner.exe ${{ matrix.asset_name }}.exe
+            # Create checksum for Windows
+            certutil -hashfile ${{ matrix.asset_name }}.exe SHA256 | findstr /v "SHA256" | findstr /v "^$" > ${{ matrix.asset_name }}.exe.sha256
           else
             cp target/release/trash-cleaner ${{ matrix.asset_name }}
+            chmod +x ${{ matrix.asset_name }}
+            # Create checksum for Unix-like systems
+            shasum -a 256 ${{ matrix.asset_name }} > ${{ matrix.asset_name }}.sha256
           fi
 
       - name: Upload release asset
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
-          path: ${{ matrix.asset_name }}
+          path: |
+            ${{ matrix.asset_name }}*
+            !target/
 
   create-release:
     name: Create Release
@@ -74,5 +81,7 @@ jobs:
         with:
           files: artifacts/**/*
           generate_release_notes: true
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
