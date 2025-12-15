@@ -1,0 +1,21 @@
+[package]
+name = "trash-cleaner"
+version = "0.2.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+colored = "2.0"
+indicatif = { version = "0.17", features = ["rayon"] } # 启用 rayon 支持
+inquire = "0.9"
+jwalk = "0.8"       # 专门用于并行文件扫描的库
+rayon = "1.8"       # Rust 并行计算事实标准
+anyhow = "1.0"      # 处理错误更优雅
+humantime = "2.1"   # 更加人性化的时间显示（可选，这里为了简洁我手写了）
+trash = "5.2.5"
+[profile.release]
+opt-level = "z"     # 优化代码体积 (或者用 3 来优化速度，CLI工具通常 z 或 s 够用了)
+lto = true          # 启用链接时优化 (Link Time Optimization)，把无用代码剔除
+codegen-units = 1   # 降低并行编译单元数，虽然编译变慢，但生成的代码更好
+panic = "abort"     # 发生 panic 时直接退出，不展开栈，大幅减小体积
+strip = true        # 自动剥离符号表 (Stripping symbols)，这一步减重效果最明显！

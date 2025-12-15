@@ -1,0 +1,20 @@
+# Rust build artifacts
+/target
+Cargo.lock
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test directories (optional - remove if you want to include test-trash)
+/test-trash/
+
+# Node modules (if any)
+node_modules/
