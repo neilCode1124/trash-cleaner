@@ -1,6 +1,8 @@
 # Rust build artifacts
 /target
-Cargo.lock
+# Note: Cargo.lock should be committed for applications (binaries)
+# Uncomment the line below only if this is a library crate
+# Cargo.lock
 
 # IDE files
 .idea/
